@@ -14,14 +14,13 @@ function copyFonts(css, basePath, outputDir) {
       try {
         copyFileSync(fullPath, outputPath);
         copiedFonts.add(fontName);
-        console.log(`Copied font: ${fontName}`);
       } catch (err) {
-        console.error(`Error copying font ${fullPath}:`, err);
+        console.error(`Error copying font ${ fullPath }:`, err);
         return match;
       }
     }
 
-    return `url('${fontName}')`;
+    return `url('${ fontName }')`;
   });
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "d8e",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "CLI tool for bundling a static, vanilla site.",
   "license": "GPL-3.0",
   "scripts": {

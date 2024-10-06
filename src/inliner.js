@@ -2,7 +2,7 @@ const { dirname, join } = require('path');
 const { readFileSync } = require('fs');
 
 const { copyFonts } = require('./asset');
-const { minifyCSS, minifyJS } =  require('./minify');
+const { minifyCSS, minifyJS } = require('./minify');
 
 function inlineAndMinifyCSS(html, basePath, outputDir) {
   const cssRegex = /<link\s+[^>]*href=["']([^"']+\.css)["'][^>]*>/g;
@@ -25,6 +25,10 @@ function inlineAndMinifyJS(html, basePath) {
   const jsRegex = /<script\s+[^>]*src=["']([^"']+\.js)["'][^>]*><\/script>/g;
 
   return html.replace(jsRegex, (match, jsPath) => {
+    if (jsPath.startsWith('https://')) {
+      return match;
+    }
+
     const fullPath = join(basePath, jsPath);
     try {
       let jsContent = readFileSync(fullPath, 'utf8');
