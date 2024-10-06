@@ -31,5 +31,5 @@ export default {
   ],
 
   // Specify external dependencies
-  external: ['fs', 'path']
+  external: ['fs', 'path', 'package.json']
 };
