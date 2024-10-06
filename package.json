@@ -1,0 +1,27 @@
+{
+  "name": "d8e",
+  "version": "0.0.0",
+  "description": "CLI tool for bundling a static, vanilla site.",
+  "license": "GPL-3.0",
+  "scripts": {
+    "build": "rollup -c --bundleConfigAsCjs"
+  },
+  "files": [
+    "build"
+  ],
+  "bin": {
+    "d8e": "build/d8e.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/noydb/d8e.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "22.0.0",
+    "@rollup/plugin-terser": "0.4.4",
+    "rollup": "3.29.5"
+  }
+}
