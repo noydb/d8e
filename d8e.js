@@ -11,18 +11,18 @@ const { processHTMLFile } = require('./src/html');
 const startTime = performance.now();
 const action = process.argv[2];
 if (action === 'version') {
-  log('info', 'd8e VERSION: 0.4.4');
+  log('info', 'd8e VERSION: 0.4.5');
   printSecondsTaken(startTime);
   return;
 }
 
-log('info', 'd8e 0.4.4 starting\n');
+log('info', 'd8e 0.4.5 starting\n');
 
 if (action !== 'build' && action !== 'b') {
   throwAndExit(`Unexpected action: '${ action }', expected 'build' or 'b'`);
 }
 
-const { inputDirectory, outputDirectory } = getConfig();
+const { inputDirectory, outputDirectory, hostedURL } = getConfig();
 if (!existsSync(inputDirectory)) {
   throwAndExit(`The specified input directory does not exist: ${ inputDirectory }`);
 }
@@ -39,11 +39,11 @@ if (!existsSync(outputDir)) {
       log('error', `Error removing output directory: ${ err }`);
     }
 
-    convertHTML();
+    convertHTML(hostedURL);
   });
 }
 
-function convertHTML() {
+function convertHTML(hostedURL) {
   copyImages(inputDirectory, outputDir);
   copyFonts(inputDirectory, outputDir);
 
@@ -57,7 +57,7 @@ function convertHTML() {
         processDirectory(fullPath);
       } else if (extname(file).toLowerCase() === '.html') {
         const relativePath = relative(fullInputPath, fullPath);
-        processHTMLFile(fullPath, join(outputDir, relativePath), outputDirectory);
+        processHTMLFile(fullPath, join(outputDir, relativePath), outputDirectory, hostedURL);
 
         processedFiles.push(fullPath);
       }
