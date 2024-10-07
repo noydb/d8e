@@ -1,18 +1,32 @@
 # d8e
 
-A node CLI tool for bundling/preparing a static website for deployment. This tool will traverse all HTML files, and
-convert JS & CSS into inline HTML scripts. This tool will also handle images & fonts.
+A node CLI tool for bundling/preparing a static HTML website for deployment. This tool will:
 
-This tool has been designed (for now) to work
-with: [Nginx]( https://github.com/heroku/heroku-buildpack-nginx/blob/main/static.md)
+1. Traverse all HTML files - in the specified `inputDirectory` in `.d8e`
+2. Convert all JS & CSS into inline HTML scripts
+3. Minify the JS, CSS & HTML
+4. Copy the HTML files - and any images & fonts - to the specified outputDirectory (in `.d8e`)
+
+---
 
 ## Usage
 
-1. `npm install -g d8e`
-2. `d8e <inputDirectory>`
+### 1. `npm install -g d8e`
 
-This tool will output the result to `dist`.
+### 2. Create a config file - in the root of your project - like:
+
+```JSON
+{
+  "inputDirectory": "src2",
+  "outputDirectory": "dist",
+  "verbose": false
+}
+```
+
+### 3. `d8e build`
 
 ---
+
+## FYI
 
 **Note: place images inside `<inputDirectory>/asset/img`. This ensures seamless mapping of image src attributes.**
