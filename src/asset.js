@@ -30,18 +30,23 @@ function copyFonts(css, basePath, outputDir) {
   });
 }
 
-function copyImages(html, basePath, outputDir) {
+function copyImages(html, basePath, outputPath) {
   const imgRegex = /<img\s+[^>]*src=["']([^"']+\.(png|jpg|jpeg|gif|svg))["'][^>]*>/g;
   const copiedImages = new Set();
+  const imgOutputDir = join(outputPath, 'img');
+
+  if (!existsSync(imgOutputDir)) {
+    mkdirSync(imgOutputDir, { recursive: true });
+  }
 
   return html.replace(imgRegex, (match, imgPath) => {
     const fullPath = join(basePath, imgPath);
     const imgName = basename(imgPath);
-    const outputPath = join(outputDir, imgName);
+    const imgOutputPath = join(imgOutputDir, imgName);
 
     if (!copiedImages.has(imgName)) {
       try {
-        copyFileSync(fullPath, outputPath);
+        copyFileSync(fullPath, imgOutputPath);
         copiedImages.add(imgName);
       } catch (err) {
         console.error(`Error copying image ${ fullPath }:`, err);
@@ -49,7 +54,8 @@ function copyImages(html, basePath, outputDir) {
       }
     }
 
-    return match.replace(imgPath, imgName);
+    const relativeImgPath = relative(outputPath, imgOutputPath).replace(/\\/g, '/');
+    return match.replace(imgPath, relativeImgPath);
   });
 }
 
