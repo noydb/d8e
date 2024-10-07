@@ -1,14 +1,19 @@
-const { copyFileSync } = require('fs');
-const { join, basename } = require('path');
+const { copyFileSync, existsSync, mkdirSync } = require('fs');
+const { basename, join, relative } = require('path');
 
 function copyFonts(css, basePath, outputDir) {
   const fontRegex = /url\(['"]?([^'"]+\.(woff2?|eot|ttf|otf))['"]?\)/g;
   const copiedFonts = new Set();
+  const fontOutputDir = join(outputDir, 'font');
+
+  if (!existsSync(fontOutputDir)) {
+    mkdirSync(fontOutputDir, { recursive: true });
+  }
 
   return css.replace(fontRegex, (match, fontPath) => {
     const fullPath = join(basePath, fontPath);
     const fontName = basename(fontPath);
-    const outputPath = join(outputDir, fontName);
+    const outputPath = join(fontOutputDir, fontName);
 
     if (!copiedFonts.has(fontName)) {
       try {
@@ -20,7 +25,8 @@ function copyFonts(css, basePath, outputDir) {
       }
     }
 
-    return `url('${ fontName }')`;
+    const relativeFontPath = relative(outputDir, join(fontOutputDir, fontName)).replace(/\\/g, '/');
+    return `url('${ relativeFontPath }')`;
   });
 }
 
@@ -43,7 +49,6 @@ function copyImages(html, basePath, outputDir) {
       }
     }
 
-    // Update the src attribute to point to the new location
     return match.replace(imgPath, imgName);
   });
 }
