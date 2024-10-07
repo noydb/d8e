@@ -1,5 +1,6 @@
 {
     "inputDirectory": "src2",
     "outputDirectory": "dist",
-    "verbose": false
+    "verbose": false,
+    "hostedURL": "https://cwp-96138d828021.herokuapp.com"
 }

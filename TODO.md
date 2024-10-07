@@ -1,5 +1,3 @@
-images and fonts are not gzipped. 
-
 When bundling to dist/about/about.html the url in the browser will be:
 https://cwp-96138d828021.herokuapp.com/work/work-overview.html
 
@@ -9,6 +7,8 @@ font paths aren't 100% for nested files. But they still seem to resolve/work?
 
 implement verbose
 
-https://pagespeed.web.dev/analysis/https-cwp-96138d828021-herokuapp-com-about-about-html/70tgjcl0de?form_factor=mobile
-
 make this tool manage nginx config etc? or nah? might be better to keep separate. 
+
+Use Replace href with full links to enable web crawling
+
+List things this tool will do to optimize for pageSpeed. Like using full (https) links to enable crawling 
