@@ -1,1 +1,1 @@
-All the images dont seem to work. 
+read from .d8e JSON config. 

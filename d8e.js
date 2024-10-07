@@ -18,6 +18,8 @@ if (!existsSync(outputDir)) {
   mkdirSync(outputDir, { recursive: true });
 }
 
+copyImages(inputDir, outputDir);
+
 function processHTMLFile(inputPath, outputPath) {
   readFile(inputPath, 'utf8', (err, data) => {
     if (err) {
@@ -29,7 +31,6 @@ function processHTMLFile(inputPath, outputPath) {
 
     let processedHTML = inlineAndMinifyCSS(data, basePath, outputDir);
     processedHTML = inlineAndMinifyJS(processedHTML, basePath);
-    processedHTML = copyImages(processedHTML, basePath, outputDir);
     processedHTML = minifyHTML(processedHTML);
 
     const outputFileDir = dirname(outputPath);

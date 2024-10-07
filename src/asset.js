@@ -1,4 +1,4 @@
-const { copyFileSync, existsSync, mkdirSync } = require('fs');
+const { copyFileSync, cpSync, existsSync, mkdirSync } = require('fs');
 const { basename, join, relative } = require('path');
 
 function copyFonts(css, basePath, outputDir) {
@@ -30,33 +30,51 @@ function copyFonts(css, basePath, outputDir) {
   });
 }
 
-function copyImages(html, basePath, outputPath) {
-  const imgRegex = /<img\s+[^>]*src=["']([^"']+\.(png|jpg|jpeg|gif|svg))["'][^>]*>/g;
-  const copiedImages = new Set();
-  const imgOutputDir = join(outputPath, 'img');
+function copyImages(basePath, outputPath) {
+  const imgInputDir = join(basePath, 'asset', 'img');
+  const imgOutputDir = join(outputPath, 'asset', 'img');
 
-  if (!existsSync(imgOutputDir)) {
-    mkdirSync(imgOutputDir, { recursive: true });
-  }
+  cpSync(imgInputDir, imgOutputDir, { recursive: true });
 
-  return html.replace(imgRegex, (match, imgPath) => {
-    const fullPath = join(basePath, imgPath);
-    const imgName = basename(imgPath);
-    const imgOutputPath = join(imgOutputDir, imgName);
+  // TODO: if/when needed, implement more relative/flexible image paths.
+  //  right now, images must be stored inside inputDirectory/asset/img
+  //  so we can just copy them across as is, and the img src paths
+  //  remain consistent/valid.
+  // const imgRegex = /<img\s+[^>]*src=["']([^"']+\.(png|jpg|jpeg|gif|svg))["'][^>]*>/g;
+  // const copiedImages = new Set();
 
-    if (!copiedImages.has(imgName)) {
-      try {
-        copyFileSync(fullPath, imgOutputPath);
-        copiedImages.add(imgName);
-      } catch (err) {
-        console.error(`Error copying image ${ fullPath }:`, err);
-        return match; // If there's an error, leave the original <img> tag unchanged
-      }
-    }
+  //
+  // if (!existsSync(imgOutputDir)) {
+  //   mkdirSync(imgOutputDir, { recursive: true });
+  // }
+  //
+  // return html.replace(imgRegex, (match, imgPath) => {
+  //   const fullPath = join(basePath, imgPath);
+  //   const imgName = basename(imgPath);
+  //   const imgOutputPath = join(imgOutputDir, imgPath);
+  //   console.log({ imgOutputPath });
+  //
+  //   // console.log(imgOutputPath);
+  //
+  //   if (!copiedImages.has(imgName)) {
+  //     try {
+  //       copyFileSync(fullPath, imgOutputPath);
+  //       copiedImages.add(imgName);
+  //     } catch (err) {
+  //       console.error(`Error copying image ${ fullPath }:`, err);
+  //       return match; // If there's an error, leave the original <img> tag unchanged
+  //     }
+  //   }
+  //
+  //   console.log({ imgPath });
 
-    const relativeImgPath = relative(outputPath, imgOutputPath).replace(/\\/g, '/');
-    return match.replace(imgPath, relativeImgPath);
-  });
+  // console.log({ ttttt: dirname(outputPath), imgOutputPath, ddd: relative(dirname(outputPath), imgOutputPath) });
+  // const relativeImgPath = relative(dirname(outputPath), imgPath).replace(/\\/g, '/');
+  // console.log(relativeImgPath);
+
+  // return imgPath;
+  // return match.replace(imgPath);
+  // });
 }
 
 module.exports = { copyFonts, copyImages };
