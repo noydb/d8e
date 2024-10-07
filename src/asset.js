@@ -1,6 +1,8 @@
 const { copyFileSync, cpSync, existsSync, mkdirSync } = require('fs');
 const { basename, join, relative } = require('path');
 
+const { log } = require('./util/log');
+
 function copyFonts(css, basePath, outputDir) {
   const fontRegex = /url\(['"]?([^'"]+\.(woff2?|eot|ttf|otf))['"]?\)/g;
   const copiedFonts = new Set();
@@ -20,7 +22,7 @@ function copyFonts(css, basePath, outputDir) {
         copyFileSync(fullPath, outputPath);
         copiedFonts.add(fontName);
       } catch (err) {
-        console.error(`Error copying font ${ fullPath }:`, err);
+        log('error', `Error copying font ${ fullPath }: ${ err }`);
         return match;
       }
     }

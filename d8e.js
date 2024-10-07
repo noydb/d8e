@@ -1,30 +1,41 @@
-const { existsSync, mkdirSync, readFile, writeFile, readdirSync, statSync } = require('fs');
+const { existsSync, mkdirSync, readFile, writeFile, readdirSync, statSync, readFileSync } = require('fs');
 const { join, dirname, extname, relative } = require('path');
+
+const { throwAndExit } = require('./src/util/error');
+const { log, printSecondsTaken } = require('./src/util/log');
 
 const { copyImages } = require('./src/asset');
 const { inlineAndMinifyJS, inlineAndMinifyCSS } = require('./src/inliner');
 const { minifyHTML } = require('./src/minify');
 
-const inputDir = process.argv[2];
-if (!inputDir) {
-  console.error('Please provide an input directory as a command line argument.');
-  process.exit(1);
+log('info', 'd8e 0.3.0 starting');
+const startTime = performance.now();
+
+const CONFIG_FILE_NAME = '.d8e';
+const CONFIG_FILE_PATH = `./${ CONFIG_FILE_NAME }`;
+let config;
+try {
+  const configData = readFileSync(CONFIG_FILE_PATH, 'utf8');
+  config = JSON.parse(configData);
+
+  log('info', `Successfully parsed config file (${ CONFIG_FILE_NAME })`);
+} catch (error) {
+  throwAndExit(`Error while reading config file (${ CONFIG_FILE_NAME }): ${ error.message }`);
 }
 
 const cwd = process.cwd();
 
-const outputDir = join(cwd, 'dist');
+const outputDir = join(cwd, config.outputDirectory);
 if (!existsSync(outputDir)) {
   mkdirSync(outputDir, { recursive: true });
 }
 
-copyImages(inputDir, outputDir);
+copyImages(config.inputDirectory, outputDir);
 
 function processHTMLFile(inputPath, outputPath) {
   readFile(inputPath, 'utf8', (err, data) => {
     if (err) {
-      console.error(`Error reading the file ${ inputPath }:`, err);
-      return;
+      throwAndExit(`Error reading HTML file: ${ inputPath }. ${ err }`);
     }
 
     const basePath = dirname(inputPath);
@@ -40,16 +51,14 @@ function processHTMLFile(inputPath, outputPath) {
 
     writeFile(outputPath, processedHTML, (err) => {
       if (err) {
-        console.error(`Error writing the file ${ outputPath }:`, err);
-        return;
+        throwAndExit(`Error writing HTML file ${ outputPath }: ${ err }`);
       }
-
-      console.log(`Processed and saved: ${ outputPath }`);
     });
   });
 }
 
-const fullInputPath = join(cwd, inputDir);
+const fullInputPath = join(cwd, config.inputDirectory);
+const processedFiles = [];
 
 function processDirectory(dir) {
   readdirSync(dir).forEach(file => {
@@ -59,11 +68,16 @@ function processDirectory(dir) {
     } else if (extname(file).toLowerCase() === '.html') {
       const relativePath = relative(fullInputPath, fullPath);
       processHTMLFile(fullPath, join(outputDir, relativePath));
+
+      processedFiles.push(fullPath);
     }
   });
 }
 
 processDirectory(fullInputPath);
 
-console.log(`Processing HTML files from ${ fullInputPath }`);
-console.log(`Output directory: ${ outputDir }`);
+for (const processedFile of processedFiles) {
+  log('info', `processed HTML file ${ processedFile }`);
+}
+
+printSecondsTaken(startTime);

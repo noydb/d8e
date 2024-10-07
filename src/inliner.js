@@ -1,6 +1,8 @@
 const { dirname, join } = require('path');
 const { readFileSync } = require('fs');
 
+const { log } = require('./util/log');
+
 const { copyFonts } = require('./asset');
 const { minifyCSS, minifyJS } = require('./minify');
 
@@ -15,8 +17,7 @@ function inlineAndMinifyCSS(html, basePath, outputDir) {
       cssContent = minifyCSS(cssContent);
       return `<style>${ cssContent }</style>`;
     } catch (err) {
-      console.error(`Error reading CSS file ${ fullPath }:`, err);
-      return match;
+      log('error', `Error reading CSS file ${ fullPath }: ${ err }`);
     }
   });
 }
@@ -35,7 +36,7 @@ function inlineAndMinifyJS(html, basePath) {
       jsContent = minifyJS(jsContent);
       return `<script>${ jsContent }</script>`;
     } catch (err) {
-      console.error(`Error reading JS file ${ fullPath }:`, err);
+      log('error', `Error reading JS file ${ fullPath }: ${ err }`);
       return match;
     }
   });
