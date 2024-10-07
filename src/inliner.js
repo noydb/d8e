@@ -3,17 +3,17 @@ const { readFileSync } = require('fs');
 
 const { log } = require('./util/log');
 
-const { copyFonts } = require('./asset');
+const { updateFontPaths } = require('./asset');
 const { minifyCSS, minifyJS } = require('./minify');
 
-function inlineAndMinifyCSS(html, basePath, outputDir) {
+function inlineAndMinifyCSS(html, basePath, outputDir, outputFileDir) {
   const cssRegex = /<link\s+[^>]*href=["']([^"']+\.css)["'][^>]*>/g;
 
   return html.replace(cssRegex, (match, cssPath) => {
     const fullPath = join(basePath, cssPath);
     try {
       let cssContent = readFileSync(fullPath, 'utf8');
-      cssContent = copyFonts(cssContent, dirname(fullPath), outputDir);
+      cssContent = updateFontPaths(cssContent, dirname(fullPath), outputDir, outputFileDir);
       cssContent = minifyCSS(cssContent);
       return `<style>${ cssContent }</style>`;
     } catch (err) {

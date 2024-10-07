@@ -5,18 +5,18 @@ const { getConfig } = require('./src/util/config-file-parser');
 const { throwAndExit } = require('./src/util/error');
 const { log, printSecondsTaken } = require('./src/util/log');
 
-const { copyImages } = require('./src/asset');
+const { copyImages, copyFonts } = require('./src/asset');
 const { processHTMLFile } = require('./src/html');
 
 const startTime = performance.now();
 const action = process.argv[2];
 if (action === 'version') {
-  log('info', 'd8e VERSION: 0.4.3');
+  log('info', 'd8e VERSION: 0.4.4');
   printSecondsTaken(startTime);
   return;
 }
 
-log('info', 'd8e 0.4.3 starting\n');
+log('info', 'd8e 0.4.4 starting\n');
 
 if (action !== 'build' && action !== 'b') {
   throwAndExit(`Unexpected action: '${ action }', expected 'build' or 'b'`);
@@ -45,6 +45,7 @@ if (!existsSync(outputDir)) {
 
 function convertHTML() {
   copyImages(inputDirectory, outputDir);
+  copyFonts(inputDirectory, outputDir);
 
   const fullInputPath = join(cwd, inputDirectory);
   const processedFiles = [];
