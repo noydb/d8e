@@ -6,7 +6,7 @@ const { log } = require('./util/log');
 function copyFonts(css, basePath, outputDir) {
   const fontRegex = /url\(['"]?([^'"]+\.(woff2?|eot|ttf|otf))['"]?\)/g;
   const copiedFonts = new Set();
-  const fontOutputDir = join(outputDir, 'font');
+  const fontOutputDir = join(outputDir, 'asset', 'font');
 
   if (!existsSync(fontOutputDir)) {
     mkdirSync(fontOutputDir, { recursive: true });

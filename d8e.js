@@ -1,4 +1,4 @@
-const { existsSync, mkdirSync, readdirSync, statSync } = require('fs');
+const { existsSync, mkdirSync, readdirSync, rm, statSync } = require('fs');
 const { join, extname, relative } = require('path');
 
 const { getConfig } = require('./src/util/config-file-parser');
@@ -32,6 +32,12 @@ const cwd = process.cwd();
 const outputDir = join(cwd, outputDirectory);
 if (!existsSync(outputDir)) {
   mkdirSync(outputDir, { recursive: true });
+} else {
+  rm(outputDir, { recursive: true }, (err) => {
+    if (err) {
+      log('error', `Error removing output directory: ${ err }`);
+    }
+  });
 }
 
 copyImages(inputDirectory, outputDir);

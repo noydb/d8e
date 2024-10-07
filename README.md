@@ -7,7 +7,8 @@ A node CLI tool for bundling/preparing a static HTML website for deployment. Thi
 3. Minify the JS, CSS & HTML
 4. Copy the HTML files - and any images & fonts - to the specified outputDirectory (in `.d8e`)
 
----
+**NOTE: place images inside `<inputDirectory>/asset/img`, and fonts inside `<inputDirectory>/asset/font` This ensures
+seamless mapping of image src attributes & font src url values.**
 
 ## Usage
 
@@ -24,9 +25,3 @@ A node CLI tool for bundling/preparing a static HTML website for deployment. Thi
 ```
 
 ### 3. `d8e b`
-
----
-
-## FYI
-
-**Note: place images inside `<inputDirectory>/asset/img`. This ensures seamless mapping of image src attributes.**
