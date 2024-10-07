@@ -23,7 +23,7 @@ A node CLI tool for bundling/preparing a static HTML website for deployment. Thi
 }
 ```
 
-### 3. `d8e build`
+### 3. `d8e b`
 
 ---
 
