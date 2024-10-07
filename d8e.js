@@ -22,7 +22,7 @@ if (action !== 'build' && action !== 'b') {
   throwAndExit(`Unexpected action: '${ action }', expected 'build' or 'b'`);
 }
 
-const { inputDirectory, outputDirectory, hostedURL } = getConfig();
+const { inputDirectory, outputDirectory } = getConfig();
 if (!existsSync(inputDirectory)) {
   throwAndExit(`The specified input directory does not exist: ${ inputDirectory }`);
 }
@@ -39,11 +39,11 @@ if (!existsSync(outputDir)) {
       log('error', `Error removing output directory: ${ err }`);
     }
 
-    convertHTML(hostedURL);
+    convertHTML();
   });
 }
 
-function convertHTML(hostedURL) {
+function convertHTML() {
   copyImages(inputDirectory, outputDir);
   copyFonts(inputDirectory, outputDir);
 
@@ -57,7 +57,7 @@ function convertHTML(hostedURL) {
         processDirectory(fullPath);
       } else if (extname(file).toLowerCase() === '.html') {
         const relativePath = relative(fullInputPath, fullPath);
-        processHTMLFile(fullPath, join(outputDir, relativePath), outputDirectory, hostedURL);
+        processHTMLFile(fullPath, join(outputDir, relativePath), outputDirectory);
 
         processedFiles.push(fullPath);
       }
