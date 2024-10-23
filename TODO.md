@@ -14,9 +14,11 @@ validate input directory is defined, output direcroty is defined, validate hoste
 I think we can reduce arguments for certain funcs by just find the config again. instead of finding it once in d8e.js
 and constantly passing the values.
 
+---
 
-Clean HTML: 
+Clean HTML & webapps: 
 https://plainvanillaweb.com/pages/styling.html
+https://plainvanillaweb.com/pages/components.html
 
 REUSABLE minimalistic CSS RESET:
 /* generic minimal CSS reset inspiration: https://www.digitalocean.com/community/tutorials/css-minimal-css-reset */ :root { box-sizing: border-box; line-height: 1.4; /* https://kilianvalkhof.com/2022/css-html/your-css-reset-needs-text-size-adjust-probably/ */ -moz-text-size-adjust: none; -webkit-text-size-adjust: none; text-size-adjust: none; } *, *::before, *::after { box-sizing: inherit; } body, h1, h2, h3, h4, h5, h6, p { margin: 0; padding: 0; font-weight: normal; } img { max-width:100%; height:auto; }
